@@ -4,7 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
-/package-lock.json
+/src/Components/CardSection.js
+/src/Components/CheckoutForm.js
+
 
 # testing
 /coverage

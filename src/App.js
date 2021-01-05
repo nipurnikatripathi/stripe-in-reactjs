@@ -1,16 +1,39 @@
 import React from "react";
-import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import CheckoutForm from "./Components/CheckoutForm";
+import { SessionUrl } from "./Config/Config";
 
 const stripePromise = loadStripe(
   "pk_test_51I570NLDsrIZdeeLSHMRxbAZTWPNBUCQuXpP2NxnZVz3uVlnbnZe5TUGpd6OgtPMbNqm6OKOdG46faZqaKVya0qA003X3b4ali"
 );
 
 export default function App() {
+  const handleClick = async (event) => {
+    const stripe = await stripePromise;
+
+    console.log("stripe", stripe);
+
+    const response = await fetch(SessionUrl + "/create-checkout-session", {
+      method: "POST",
+    });
+    console.log("response", response);
+
+    const session = await response.json();
+
+    console.log("session", session);
+
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    console.log("result", result);
+
+    if (result.error) {
+      console.log(result.error.message);
+    }
+  };
   return (
-    <Elements stripe={stripePromise}>
-      <CheckoutForm />
-    </Elements>
+    <button role="link" onClick={handleClick}>
+      Checkout
+    </button>
   );
 }
